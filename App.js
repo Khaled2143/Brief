@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-
+// Venv is a tool that create an isolated enviroment for oyur project. Ensures that the project has it own dependencies seperate fromthe global python env on your system
 export default function App() {
   const [data, setData] = useState(null); // State to hold the fetched data
 

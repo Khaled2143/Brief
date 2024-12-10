@@ -1,17 +1,8 @@
 from flask import Flask
-from bs4 import BeautifulSoup
-import requests
-import json
+from scraper.web_scraper import scrape
+from summarize.ai_summarize import chat_with_gpt
 
 app = Flask(__name__)
-
-# Web Scraping
-
-url = "https://www.dw.com/en/us-trump-outlines-sweeping-policy-agenda-in-tv-interview/a-70996947"
-
-page = requests.get(url)
-
-soup = BeautifulSoup(page.text, "html")
 
 
 @app.route("/")
@@ -20,17 +11,14 @@ def home():
 
 
 @app.route("/scrape")
-def scrape():
-    title = soup.find("h1").text if soup.find("h1") else "No Title Found"
+def scrape_route():
+    return scrape()
 
-    paragraphs = [p.text for p in soup.find_all("p")]
 
-    data = {"title": title, "paragraphs": paragraphs}
-
-    with open("scrapped_data", "w") as json_file:
-        json.dump(data, json_file, indent=4)
-
-    return {"message": "Data scrapped and saved to scrapped_data.json"}
+@app.route("/summarize")
+def summarize_route():
+    prompt = "Summarize the contents of the scraped data leaving only the most important information of changes of what you summarized"
+    return {"response" : chat_with_gpt(prompt)}
 
 
 if __name__ == "__main__":
