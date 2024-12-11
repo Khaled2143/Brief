@@ -37,3 +37,6 @@ yarn-error.*
 
 # Ignore virtual environment
 venv/
+
+# ignore all json files
+*.json
