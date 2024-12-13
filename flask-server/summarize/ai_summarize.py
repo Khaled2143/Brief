@@ -38,4 +38,6 @@ def chat_with_gpt(prompt):
         file.flush()
         print(f"Finished writing to file: {filename}")
 
+    print(response.choices[0].message.content.strip())
+
     return response.choices[0].message.content.strip()

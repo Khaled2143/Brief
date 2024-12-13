@@ -1,58 +1,37 @@
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
-import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
-const FetchComponent = () => {
-  const [data, setData] = useState(null); // Stores fetched data
-  const [error, setError] = useState(null); // State for error handling
-  const [loading, setLoading] = useState(true); // State for loading indicator
-
-  const fetchData = async () => {
-    try {
-      console.log("Fetching Data...");
-      const response = await fetch("http://127.0.0.1:5000/summarize");
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const result = await response.json();
-      console.log("Fetched Data:", result);
-      setData(result.response); // Directly set the response string
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setError(err.toString());
-    } finally {
-      setLoading(false); // Ensure loading stops
-    }
-  };
-
-  useEffect(() => {
-    fetchData(); // Fetch data when the component mounts
-  }, []);
+const FetchComponent = ({ route }) => {
+  const { article } = route.params; // Get the article data
 
   return (
-    <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
-      {error && <Text style={styles.error}>Error: {error}</Text>}
-      {data && <Text style={styles.text}>Summary: {data}</Text>}
-    </View>
+    <ScrollView style={styles.container}>
+      {/* Display article headline */}
+      <Text style={styles.headline}>{article.headline}</Text>
+
+      {/* Display the full summarized content */}
+      <Text style={styles.content}>{article.content}</Text>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     padding: 20,
+    backgroundColor: "#fff",
   },
-  text: {
-    fontSize: 16,
+  headline: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
     textAlign: "center",
   },
-  error: {
-    color: "red",
+  content: {
     fontSize: 16,
-    textAlign: "center",
+    lineHeight: 24,
+    marginTop: 10,
+    textAlign: "justify",
+    marginBottom: 10,
   },
 });
 

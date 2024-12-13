@@ -18,7 +18,12 @@ def scrape(url):
 
     paragraphs = [p.text for p in soup.find_all("p")]
 
-    scraped_data = {"title": title, "paragraphs": paragraphs}
+    image_tag = soup.find("img")
+    image_url = (
+        image_tag["src"] if image_tag and "src" in image_tag.attrs else "No image found"
+    )
+
+    scraped_data = {"title": title, "paragraphs": paragraphs, "image_url": image_url}
 
     if not os.path.exists("total_summaries"):
         os.makedirs("total_summaries")
