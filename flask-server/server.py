@@ -20,7 +20,6 @@ def home():
 URLS_TO_SCRAPE = [
     "https://www.foxnews.com/politics/trump-says-wray-resignation-great-day-america-touts-kash-patel-most-qualified-lead-fbi",
     "https://www.cnn.com/2024/12/11/politics/cnn-poll-trump-transition/index.html",
-    "https://mashable.com/article/pornhub-year-in-review-2024",
 ]
 
 

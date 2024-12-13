@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     marginBottom: 10,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "black",
     borderRadius: 5,
-    backgroundColor: "#fff",
+    backgroundColor: "#ede8d0",
     width: "90%",
   },
   text: {

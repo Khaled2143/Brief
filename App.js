@@ -1,12 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import FetchComponent from "./component/Fetch";
 import Headline from "./component/Headline";
 
 const Stack = createStackNavigator();
+
+const CustomTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#ede8d0", // Change this to your desired background color
+  },
+};
 
 export default function App() {
   const [articles, setArticles] = useState([]); // Stores articles
@@ -29,16 +37,18 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-  
+    <NavigationContainer theme={CustomTheme}>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: "#ede8d0" },
+        }}
+      >
         <Stack.Screen name="Headline">
           {(props) => (
             <Headline {...props} articles={articles} loading={loading} />
           )}
         </Stack.Screen>
 
-       
         <Stack.Screen
           name="FetchData"
           component={FetchComponent}
