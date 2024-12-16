@@ -10,26 +10,23 @@ from datetime import datetime
 
 
 def scrape(url):
-
     page = requests.get(url)
     soup = BeautifulSoup(page.text, "html.parser")
 
-    title = soup.find("h1").text if soup.find("h1") else "No Title Found"
+    # Find all images
+    image_tag = soup.find("meta", property="og:image")
+    image_url = image_tag["content"] if image_tag else None
 
-    paragraphs = [p.text for p in soup.find_all("p")]
+    # Extract 'src' attribute if available
+    if image_tag and "src" in image_tag.attrs:
+        image_url = image_tag["src"]
 
-    image_tag = soup.find("img")
-    image_url = image_tag["src"] if image_tag else None
+    # Use fallback URL if no valid image is found
+    if not image_url:
+        image_url = "https://via.placeholder.com/150"
 
-    scraped_data = {"title": title, "paragraphs": paragraphs, "image_url": image_url}
-
-    if not os.path.exists("total_summaries"):
-        os.makedirs("total_summaries")
-
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = f"total_summaries/scrape_{timestamp}.json"
-
-    with open(filename, "w") as file:
-        json.dump(scraped_data, file, indent=4)
-
-    return {"title": title, "paragraphs": paragraphs}
+    return {
+        "title": soup.find("h1").text if soup.find("h1") else "No Title Found",
+        "paragraphs": [p.text for p in soup.find_all("p")],
+        "image_url": image_url,
+    }

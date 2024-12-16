@@ -35,6 +35,7 @@ const Headline = ({ articles, navigation, loading }) => {
         ...article,
         counter: 0,
       }));
+
       setLocalArticles(updateArticles);
     }
   }, [articles]);
@@ -44,18 +45,21 @@ const Headline = ({ articles, navigation, loading }) => {
   }
 
   // Show a fallback message if no articles are available
-  if (articles.length === 0) {
+  if (!articles || articles.length === 0) {
     return <Text style={styles.loading}>No articles available</Text>;
   }
 
   return (
     <FlatList
       contentContainerStyle={styles.container}
-      data={localArticles} // Pass the articles array as data
+      data={[
+        ...(topArticle ? [topArticle] : []),
+        ...localArticles.filter((article) => article !== topArticle),
+      ]} // Pass the articles array as data
       keyExtractor={(item, index) => index.toString()} // Unique key for each item
       renderItem={({ item }) => (
         <Pressable
-          style={styles.button}
+          style={item === topArticle ? styles.topButton : styles.button}
           onPress={() => navigation.navigate("FetchData", { article: item })}
           onPressIn={() => {
             setLocalArticles((prevArticles) =>
@@ -75,11 +79,14 @@ const Headline = ({ articles, navigation, loading }) => {
             source={
               item.image_url
                 ? { uri: item.image_url }
-                : require("../img/Trump_IMG_1.jpg")
+                : require("../img/Trump_2.jpg")
             }
-            style={styles.images}
+            style={item === topArticle ? styles.topButtonImage : styles.images}
           />
-          <Text numberOfLines={3} style={styles.text}>
+          <Text
+            numberOfLines={3}
+            style={item === topArticle ? styles.topText : styles.text}
+          >
             {item.headline}
           </Text>
         </Pressable>
@@ -125,6 +132,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginTop: 20,
+  },
+  topButtonImage: {
+    height: 200,
+    width: 300,
+    resizeMode: "cover",
+  },
+  topText: {
+    fontSize: 25,
+  },
+  topButton: {
+    flexDirection: "column",
+    alignItems: "center",
+    borderWidth: 0.5,
+    width: "100%",
+    marginBottom: 10,
+    borderRadius: 5,
+    height: 250,
+    padding: 10,
   },
 });
 

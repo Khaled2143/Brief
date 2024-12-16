@@ -5,8 +5,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
 import FetchComponent from "./component/Fetch";
 import Headline from "./component/Headline";
+import Login from "./component/LoginForm";
+import Discussion from "./component/Discussion";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const CustomTheme = {
   ...DefaultTheme,
@@ -19,6 +24,12 @@ const CustomTheme = {
 export default function App() {
   const [articles, setArticles] = useState([]); // Stores articles
   const [loading, setLoading] = useState(true); // Tracks loading state
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    alert("Login successful!");
+  };
 
   const fetchArticles = async () => {
     try {
@@ -38,24 +49,36 @@ export default function App() {
 
   return (
     <NavigationContainer theme={CustomTheme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: "#ede8d0" },
-        }}
-      >
-        <Stack.Screen name="Headline">
-          {(props) => (
-            <Headline {...props} articles={articles} loading={loading} />
-          )}
-        </Stack.Screen>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-        <Stack.Screen
-          name="FetchData"
-          component={FetchComponent}
-          options={{ title: "Article Details" }}
-        />
-      </Stack.Navigator>
-      <StatusBar style="auto" />
+            if (route.name === "Headline") {
+              iconName = focused
+                ? "information-circle"
+                : "information-circle-outline";
+            } else if (route.name === "Discussion") {
+              iconName = focused ? "list" : "list-outline";
+            } else {
+              iconName = focused ? "log-in" : "log-in-outline";
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: "tomato",
+          tabBarInactiveTintColor: "gray",
+        })}
+      >
+        <Tab.Screen name="Headline">
+          {() => <Headline articles={articles} loading={loading} />}
+        </Tab.Screen>
+
+        <Tab.Screen name="Discussion" component={Discussion} />
+
+        <Tab.Screen name="Login">
+          {() => <Login onLogin={handleLogin} />}
+        </Tab.Screen>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
