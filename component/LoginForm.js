@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import axios from "axios";
 
 import {
   Text,
@@ -15,12 +16,27 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    if (username === "Test" && password == "123") {
-      onLogin({ username, id: 1 });
+    if (!username || !password) {
+      alert("Username and password must be filled");
     } else {
-      alert("Invalid Credentials");
-    }
-  };
+      const userData = { username, password };
+      axios
+      .post("http://localhost:5001/api/login", {
+        username: username,
+        password: password
+      })
+      .then((response)=> {
+        if (response.data.success){
+          console.log("Login Successful")
+        } else {
+          console.log("Invalid Credintals")
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again.")
+      })
+    }}
 
   return (
     <View style={styles.container}>
