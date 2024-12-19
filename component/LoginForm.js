@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Text,
@@ -14,6 +15,7 @@ import {
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigation = useNavigation();
 
   const handleLogin = () => {
     if (!username || !password) {
@@ -21,22 +23,27 @@ const Login = ({ onLogin }) => {
     } else {
       const userData = { username, password };
       axios
-      .post("http://localhost:5001/api/login", {
-        username: username,
-        password: password
-      })
-      .then((response)=> {
-        if (response.data.success){
-          console.log("Login Successful")
-        } else {
-          console.log("Invalid Credintals")
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("Something went wrong. Please try again.")
-      })
-    }}
+        .post("http://localhost:5001/api/login", {
+          username: username,
+          password: password,
+        })
+        .then((response) => {
+          if (response.data.success) {
+            console.log("Login Successful");
+          } else {
+            console.log("Invalid Credintals");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Something went wrong. Please try again.");
+        });
+    }
+  };
+
+  const handleSignUp = () => {
+    navigation.navigate("SignUp");
+  };
 
   return (
     <View style={styles.container}>
@@ -56,6 +63,9 @@ const Login = ({ onLogin }) => {
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
