@@ -14,21 +14,28 @@ import {
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSignUp = () => {
+    
+  }
   return (
-    <View>
-      <Text>Sign UP here</Text>
+    <View style={styles.container}>
+      <Text style={styles.loginText}>Sign UP here</Text>
       <TextInput
-        style={StyleSheet.textInput}
+        style={styles.textInput}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
       />
       <TextInput
-        style={StyleSheet.textInput}
+        style={styles.textInput}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
       />
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Sign Up</Text>
+      </TouchableOpacity>
     </View>
   );
 };

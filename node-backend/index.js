@@ -32,7 +32,7 @@ app.post("/api/signup", async (req, res) => {
   }
 
   try {
-    hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     users.push({ username, password: hashedPassword });
     res.json({ success: true, message: "Account has been created" });
