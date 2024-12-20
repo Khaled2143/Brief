@@ -91,7 +91,7 @@ export default function App() {
 
         <Tab.Screen name="Discussion" component={Discussion} />
 
-        <Tab.Screen name="Login" component={LoginStack} />
+        <Tab.Screen name="Account" component={LoginStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -14,10 +14,36 @@ import {
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const isValid = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/.test(password);
 
   const handleSignUp = () => {
-    
-  }
+    if (!username || !password) {
+      alert("Username and Password must be filled.");
+      return;
+    }
+    if (!isValid) {
+      console.log("Password does not meet criteria");
+      return;
+    } else {
+      const userData = { username, password };
+
+      axios
+        .post("http://localhost:5001/api/signup", {
+          userData,
+        })
+        .then((response) => {
+          if (response.data.success) {
+            alert("Sign Up Successful ");
+          } else {
+            alert("Username already exists");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Something went wrong. Please try again");
+        });
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.loginText}>Sign UP here</Text>

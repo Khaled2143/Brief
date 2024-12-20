@@ -3,6 +3,15 @@ const bcrypt = require("bcryptjs");
 const app = express();
 const PORT = 5001;
 
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(
+    "mongodb+srv://:@cluster0.gmutn.mongodb.net/myDatabase?retryWrites=true&w=majority"
+  )
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.error("Connection Error:", err));
+
 app.use(express.json());
 let users = [];
 
