@@ -29,7 +29,8 @@ const SignUp = () => {
 
       axios
         .post("http://localhost:5001/api/signup", {
-          userData,
+          username: username,
+          password: password,
         })
         .then((response) => {
           if (response.data.success) {
@@ -59,7 +60,7 @@ const SignUp = () => {
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
     </View>
