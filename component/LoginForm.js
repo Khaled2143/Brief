@@ -28,15 +28,19 @@ const Login = ({ onLogin }) => {
           password: password,
         })
         .then((response) => {
+          console.log("Login Response:", response.data);
           if (response.data.success) {
-            console.log("Login Successful");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Account", params: { username } }],
+            });
           } else {
-            console.log("Invalid Credintals");
+            alert("Invalid username or password. Please try again.");
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert("Something went wrong. Please try again.");
+          alert("Server error: Unable to login. Please try again later.");
         });
     }
   };

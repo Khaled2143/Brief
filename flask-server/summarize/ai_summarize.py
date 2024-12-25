@@ -2,13 +2,15 @@ from openai import OpenAI
 import os
 from datetime import datetime
 import json
+from dotenv import load_dotenv
 
-# Use a relative path to store the file
-file_path = os.path.join(os.path.dirname(__file__), "../Hidden-API/api_key.txt")
+load_dotenv()
 
 
-with open(file_path, "r") as file:
-    api_key_org = file.read().strip()
+api_key_org = os.getenv("OPENAI_API_KEY")
+if not api_key_org:
+    raise EnvironmentError("API key not found in environment variables.")
+
 
 client = OpenAI(
     # defaults to os.environ.get("OPENAI_API_KEY")

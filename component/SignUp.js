@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Text,
@@ -14,36 +15,37 @@ import {
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const isValid = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/.test(password);
+  const navigation = useNavigation();
 
   const handleSignUp = () => {
     if (!username || !password) {
       alert("Username and Password must be filled.");
       return;
     }
+    const isValid = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/.test(password);
     if (!isValid) {
-      console.log("Password does not meet criteria");
+      alert("Username and Password must be filled.");
       return;
-    } else {
-      const userData = { username, password };
-
-      axios
-        .post("http://localhost:5001/api/signup", {
-          username: username,
-          password: password,
-        })
-        .then((response) => {
-          if (response.data.success) {
-            alert("Sign Up Successful ");
-          } else {
-            alert("Username already exists");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("Something went wrong. Please try again");
-        });
     }
+
+    axios
+      .post("http://localhost:5001/api/signup", {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        console.log("Signup Response:", response.data);
+        if (response.data.success) {
+          console.log("Navigating to account page...");
+          navigation.navigate("Account", { username });
+        } else {
+          alert("Username already exists");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Something went wrong. Please try again");
+      });
   };
   return (
     <View style={styles.container}>

@@ -10,6 +10,7 @@ import Discussion from "./component/Discussion";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import SignUp from "./component/SignUp";
+import Account from "./component/Account";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,7 +51,7 @@ export default function App() {
 
   const LoginStack = () => {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ animationEnabled: false }}>
         <Stack.Screen name="Login" options={{ headerShown: false }}>
           {() => <Login onLogin={handleLogin} />}
         </Stack.Screen>
@@ -58,7 +59,13 @@ export default function App() {
         <Stack.Screen
           name="SignUp"
           component={SignUp}
-          options={{ title: "Create an account", headerShown: true }}
+          options={{ title: "Create an account", headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Account"
+          component={Account}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     );
@@ -91,7 +98,7 @@ export default function App() {
 
         <Tab.Screen name="Discussion" component={Discussion} />
 
-        <Tab.Screen name="Account" component={LoginStack} />
+        <Tab.Screen name="Profile" component={LoginStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,5 +1,3 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
 # dependencies
 node_modules/
 
@@ -20,7 +18,7 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
-# debug
+# Debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -29,14 +27,22 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# Environment files
+.env
+.env.*
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 
-# Ignore virtual environment
+# Virtual environment
 venv/
 
-# ignore all json files
-*.json
+# Ignore temporary files
+*.log
+
+# Local development tools
+.vscode/
+.idea/
+
+# Optional: Specific to your workflow
+# Add any other custom files or folders specific to your project that shouldn't be versioned.
