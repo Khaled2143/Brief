@@ -44,5 +44,11 @@ venv/
 .vscode/
 .idea/
 
+# Ignore all JSON files in total_responses
+flask-server/total_responses/*.json
+
+# Ignore all JSON files in total_summaries
+flask-server/total_summaries/*.json
+
 # Optional: Specific to your workflow
 # Add any other custom files or folders specific to your project that shouldn't be versioned.
