@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
@@ -7,6 +7,7 @@ import FetchComponent from "./component/Fetch";
 import Headline from "./component/Headline";
 import Login from "./component/LoginForm";
 import Discussion from "./component/Discussion";
+import CreateComponent from "./component/CreateComponent";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import SignUp from "./component/SignUp";
@@ -70,6 +71,7 @@ export default function App() {
       </Stack.Navigator>
     );
   };
+
   return (
     <NavigationContainer theme={CustomTheme}>
       <Tab.Navigator

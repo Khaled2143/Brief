@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const authenticate = require("./middleware/authenticate");
 require("dotenv").config();
 const app = express();
@@ -107,8 +108,11 @@ app.post("/api/signup", async (req, res) => {
 
 app.get("/api/user/username", authenticate, async (req, res) => {
   try {
-    const userID = req.user._id;
+    const userID = req.user.userID;
+    console.log("Decoded userID:", userID);
+
     const user = await Account.findById(userID);
+    console.log("User found in MongoDB:", user);
 
     if (!user) {
       return res.json({ success: false, message: "Username does not exist" });

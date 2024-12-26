@@ -26,13 +26,14 @@ const Discussion = () => {
   if (!discussion || discussion.length === 0) {
     return (
       <View style={styles.container}>
+        
         <Text> No dicussions available.</Text>
       </View>
     );
   }
   return (
-    <View>
-      <Pressable>+</Pressable>
+    <View style={styles.container}>
+      <Pressable>Create Discussion</Pressable>
       <FlatList
         data={discussion}
         keyExtractor={(item) => item._id.toString()}
