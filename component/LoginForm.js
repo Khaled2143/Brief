@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -11,37 +11,40 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { UserContext } from "../context/UserContext.js";
 
 const Login = ({ onLogin }) => {
+  const { setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
       alert("Username and password must be filled");
-    } else {
-      const userData = { username, password };
-      axios
-        .post("http://localhost:5001/api/login", {
-          username: username,
-          password: password,
-        })
-        .then((response) => {
-          console.log("Login Response:", response.data);
-          if (response.data.success) {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Account", params: { username } }],
-            });
-          } else {
-            alert("Invalid username or password. Please try again.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          alert("Server error: Unable to login. Please try again later.");
+      return;
+    }
+
+    try {
+      const response = await axios.post("http://localhost:5001/api/login", {
+        username: username,
+        password: password,
+      });
+
+      if (response.data.success) {
+        const userData = { username, token: response.data.token };
+        setUser(userData);
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "Account", params: { username } }],
         });
+      } else {
+        alert("Invalid username or password. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Server error: Unable to login. Please try again later.");
     }
   };
 

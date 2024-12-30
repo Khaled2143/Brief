@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import SignUp from "./component/SignUp";
 import Account from "./component/Account";
+import { UserContext, UserProvider } from "./context/UserContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -30,8 +31,9 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   const handleLogin = (userData) => {
+    console.log("Before setUser in App.js:", userData);
     setUser(userData);
-    alert("Login successful!");
+    console.log("After setUser in App.js:", user);
   };
 
   const fetchArticles = async () => {
@@ -72,37 +74,73 @@ export default function App() {
     );
   };
 
+  const DiscussionStack = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Discussion"
+          component={Discussion}
+          options={{
+            headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name="CreateDiscussion"
+          component={CreateComponent}
+          options={({ navigation }) => ({
+            title: "Create Discussion",
+            presentation: "modal",
+            gestureEnabled: true,
+            headerLeft: () => null,
+            headerRight: () => (
+              <Pressable
+                onPress={() => navigation.goBack()}
+                style={{ padding: 20 }}
+              >
+                <Text style={{ color: "gray", fontSize: 15 }}>X</Text>
+              </Pressable>
+            ),
+            headerShown: false,
+          })}
+        />
+      </Stack.Navigator>
+    );
+  };
+
   return (
-    <NavigationContainer theme={CustomTheme}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+    <UserProvider>
+      <NavigationContainer theme={CustomTheme}>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
 
-            if (route.name === "Headline") {
-              iconName = focused
-                ? "information-circle"
-                : "information-circle-outline";
-            } else if (route.name === "Discussion") {
-              iconName = focused ? "list" : "list-outline";
-            } else {
-              iconName = focused ? "log-in" : "log-in-outline";
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
-        })}
-      >
-        <Tab.Screen name="Headline">
-          {() => <Headline articles={articles} loading={loading} />}
-        </Tab.Screen>
+              if (route.name === "Headline") {
+                iconName = focused
+                  ? "information-circle"
+                  : "information-circle-outline";
+              } else if (route.name === "Forum") {
+                iconName = focused ? "list" : "list-outline";
+              } else {
+                iconName = focused ? "log-in" : "log-in-outline";
+              }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: "tomato",
+            tabBarInactiveTintColor: "gray",
+          })}
+        >
+          <Tab.Screen name="Headline">
+            {() => <Headline articles={articles} loading={loading} />}
+          </Tab.Screen>
 
-        <Tab.Screen name="Discussion" component={Discussion} />
+          <Tab.Screen name="Forum" component={DiscussionStack} />
 
-        <Tab.Screen name="Profile" component={LoginStack} />
-      </Tab.Navigator>
-    </NavigationContainer>
+          <Tab.Screen name="Profile" component={LoginStack} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 

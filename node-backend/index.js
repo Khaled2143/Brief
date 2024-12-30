@@ -7,6 +7,7 @@ const app = express();
 const PORT = 5001;
 
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -24,7 +25,7 @@ const discussionSchema = new mongoose.Schema({
   title: { type: String, required: true },
   author: { type: String, required: true },
   content: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: String, default: Date.now },
 });
 
 const Discussion = mongoose.model("Discussion", discussionSchema);
@@ -164,6 +165,7 @@ app.get("/api/discussions", async (req, res) => {
 
 app.post("/api/discussions", async (req, res) => {
   const { title, content, author, createdAt } = req.body;
+  console.log("Received payload:", req.body);
 
   if (!title || !content) {
     return res.status(400).json({
@@ -189,7 +191,7 @@ app.post("/api/discussions", async (req, res) => {
     console.error("Error creating disucssions:", error);
     res.status(500).json({
       success: false,
-      messae: "Failed to create discussion",
+      message: "Failed to create discussion",
     });
   }
 });

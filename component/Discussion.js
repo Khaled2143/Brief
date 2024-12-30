@@ -1,9 +1,11 @@
 import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const Discussion = () => {
   const [discussion, setDiscussion] = useState([]);
+  const navigation = useNavigation();
 
   const retrieveDiscussion = () => {
     axios
@@ -23,10 +25,16 @@ const Discussion = () => {
     retrieveDiscussion();
   }, []);
 
+  const createPost = () => {
+    navigation.navigate("CreateDiscussion");
+  };
+
   if (!discussion || discussion.length === 0) {
     return (
       <View style={styles.container}>
-        
+        <Pressable onPress={createPost}>
+          <Text>Create Discussion</Text>
+        </Pressable>
         <Text> No dicussions available.</Text>
       </View>
     );
