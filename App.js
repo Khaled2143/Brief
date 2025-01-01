@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import SignUp from "./component/SignUp";
 import Account from "./component/Account";
+import TotalDiscussion from "./component/TotalDiscussion";
 import { UserContext, UserProvider } from "./context/UserContext";
 
 const Stack = createStackNavigator();
@@ -103,6 +104,14 @@ export default function App() {
             ),
             headerShown: false,
           })}
+        />
+
+        <Stack.Screen
+          name="TotalDiscussion"
+          component={TotalDiscussion}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     );
