@@ -7,7 +7,6 @@ const app = express();
 const PORT = 5001;
 
 const mongoose = require("mongoose");
-const { ObjectId } = require("mongodb");
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -29,6 +28,27 @@ const discussionSchema = new mongoose.Schema({
 });
 
 const Discussion = mongoose.model("Discussion", discussionSchema);
+
+const commentSchema = new mongoose.Schema(
+  {
+    disucssionID: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Discussion",
+      required: true,
+    },
+    author: { type: String, required: true },
+    content: { type: String, required: true },
+    likes: { type: Number, default: 0 },
+    parentComment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null,
+    },
+  },
+  { timestamps: true }
+);
+
+const Comment = mongoose.model("Comment", commentSchema);
 
 app.use(express.json());
 

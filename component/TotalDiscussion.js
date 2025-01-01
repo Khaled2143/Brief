@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const TotalDiscussion = ({ route }) => {
   const { discussion } = route.params;
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{discussion.title}</Text>
