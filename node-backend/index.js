@@ -31,12 +31,12 @@ const Discussion = mongoose.model("Discussion", discussionSchema);
 
 const commentSchema = new mongoose.Schema(
   {
-    disucssionID: {
+    discussionID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Discussion",
       required: true,
     },
-    author: { type: String, required: true },
+    username: { type: String, required: true },
     content: { type: String, required: true },
     likes: { type: Number, default: 0 },
     parentComment: {
@@ -54,6 +54,49 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
+});
+
+app.post("/api/discussions/:id/comments", async (req, res) => {
+  const { username, content } = req.body;
+  const { id: discussionID } = req.params;
+  console.log("Discussion ID:", discussionID);
+  console.log("Request Body:", req.body);
+
+  try {
+    const discussion = await Discussion.findById(discussionID);
+    if (!discussion) {
+      return res.status(400).json({
+        success: false,
+        message: "Discusson was not found: Ensure the discussion ID corresponds to an existing discussion in the database",
+      });
+    }
+    if (!username || !content) {
+      return res.status(400).json({
+        success: false,
+        message: "Username and Content must both be provided",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(discussionID)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid discussion ID: Please provide a valid MongoDB ObjectID for the discussion",
+      });
+    }
+
+    const comment = await Comment.create({ username, content, discussionID });
+    return res.json({
+      success: true,
+      message: "Reply has been created",
+      comment,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 });
 
 app.post("/api/login", async (req, res) => {
