@@ -56,6 +56,39 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
+app.get("/api/discussions/:id/comments", async (req, res) => {
+  const { id: discussionID } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(discussionID)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid Disucssion ID: Please provide a valid MongoDB objectID for the discussion",
+      });
+    }
+
+    const comments = await Comment.find({ discussionID });
+
+    if (comments.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "No comments were found: Please ensure the MongoDB objectID is correct",
+      });
+    }
+    return res.json({
+      success: true,
+      message: "Comments retrieved successfully",
+      comments,
+    });
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+});
+
 app.post("/api/discussions/:id/comments", async (req, res) => {
   const { username, content } = req.body;
   const { id: discussionID } = req.params;
@@ -67,7 +100,8 @@ app.post("/api/discussions/:id/comments", async (req, res) => {
     if (!discussion) {
       return res.status(400).json({
         success: false,
-        message: "Discusson was not found: Ensure the discussion ID corresponds to an existing discussion in the database",
+        message:
+          "Discusson was not found: Ensure the discussion ID corresponds to an existing discussion in the database",
       });
     }
     if (!username || !content) {
@@ -80,7 +114,8 @@ app.post("/api/discussions/:id/comments", async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(discussionID)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid discussion ID: Please provide a valid MongoDB ObjectID for the discussion",
+        message:
+          "Invalid discussion ID: Please provide a valid MongoDB ObjectID for the discussion",
       });
     }
 
