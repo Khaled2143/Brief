@@ -56,6 +56,89 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
+app.post("/api/discussions/:id/dislike", async (req, res) => {
+  const { id: commentID } = req.params;
+
+  try {
+    if (mongoose.Types.ObjectId.isValid(commentID)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid Comment ID: Please ensure you are providing a vald MongoDB comment id (ObjectID)",
+      });
+    }
+
+    const comment = await Comment.findById(commentID);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "This comment does not exist, please ensure a valid MongoDB ID is being provided (ObjectID)",
+      });
+    }
+
+    const dislikedComment = await Comment.findByIdAndUpdate(
+      commentID,
+      { $inc: { likes: -1 } },
+      { new: true }
+    );
+
+    return res.json({
+      success: true,
+      message: "Like on comment has been decremented successfully",
+      likes: dislikedComment.likes,
+      dislikedComment,
+    });
+  } catch (error) {
+    console.error("Internal Server Error: Please try again later");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.post("/api/discussions/:id/like", async (req, res) => {
+  const { id: commentID } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(commentID)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Comment ID: Please provide a valid MongoDB ObjectID",
+      });
+    }
+
+    const comment = await Comment.findById(commentID);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Comment does not exist please ensure a valid comment ID is being provided",
+      });
+    }
+    const likedComment = await Comment.findByIdAndUpdate(
+      commentID,
+      { $inc: { likes: 1 } },
+      { new: true }
+    );
+
+    return res.json({
+      success: true,
+      message: "Like count has been incremented",
+      likes: likedComment.likes,
+      likedComment,
+    });
+  } catch (error) {
+    console.error("An internal server error occured:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error occured, please try again.",
+    });
+  }
+});
+
 app.get("/api/discussions/:id/comments", async (req, res) => {
   const { id: discussionID } = req.params;
   try {
