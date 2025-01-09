@@ -62,6 +62,53 @@ const TotalDiscussion = ({ route }) => {
     }
   };
 
+  const handleLike = async (commentID) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/api/discussions/${commentID}/like`
+      );
+      if (response.data.success) {
+        setComment((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === commentID
+              ? {
+                  ...comment,
+                  likes: response.data.likes,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error Liking Comment:", error);
+      alert("Failed to like the comment. Please try again.");
+    }
+  };
+
+  const handleDislike = async (commentID) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5001/api/discussions/${commentID}/dislike`
+      );
+
+      if (response.data.success) {
+        setComment((prevComments) =>
+          prevComments.map((comment) =>
+            comment._id === commentID
+              ? {
+                  ...comment,
+                  likes: response.data.likes,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error Disliking Comment:", error);
+      alert("Failed to dislike comment. Please try again");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{discussion.title}</Text>
@@ -91,7 +138,7 @@ const TotalDiscussion = ({ route }) => {
             <View style={styles.commentContainer}>
               <Text>{item.content}</Text>
               <Text>{item.username}</Text>
-              <Text>{item.likes}</Text>
+              <Text>{`Likes: ${item.likes}`}</Text>
               <Text>
                 {new Date(item.createdAt).toLocaleString("en-US", {
                   weekday: "short",
@@ -102,11 +149,16 @@ const TotalDiscussion = ({ route }) => {
                   minute: "2-digit",
                 })}
               </Text>
+              <Pressable onPress={() => handleLike(item._id)}>
+                <Text>LIKE</Text>
+              </Pressable>
+              <Pressable onPress={() => handleDislike(item._id)}>
+                <Text>DISLIKE</Text>
+              </Pressable>
             </View>
           )}
           refreshing={refreshing}
           onRefresh={handleRefresh}
-        
         />
       )}
     </View>

@@ -60,7 +60,7 @@ app.post("/api/discussions/:id/dislike", async (req, res) => {
   const { id: commentID } = req.params;
 
   try {
-    if (mongoose.Types.ObjectId.isValid(commentID)) {
+    if (!mongoose.Types.ObjectId.isValid(commentID)) {
       return res.status(400).json({
         success: false,
         message:
