@@ -14,6 +14,7 @@ const TotalDiscussion = ({ route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const { _id: id } = discussion;
   const { user, setUser } = useContext(UserContext);
+  const [votedComments, setVotedComments] = useState({});
 
   const retrieveCommentsAndSetState = async () => {
     setLoading(true);
@@ -44,8 +45,10 @@ const TotalDiscussion = ({ route }) => {
         content,
         username: user.username,
       })
-      .then((resposne) => {
+      .then((response) => {
         console.log("Comment Posted", resposne.data);
+        setComment((prevComments) => [...prevComments, response.data.comment]);
+        setContent("");
       })
       .catch((error) => {
         console.error(
@@ -63,9 +66,15 @@ const TotalDiscussion = ({ route }) => {
   };
 
   const handleLike = async (commentID) => {
+    if (votedComments[commentID]) return;
+
+    setVotedComments((prev) => ({ ...prev, [commentID]: true }));
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/discussions/${commentID}/like`
+        `http://localhost:5001/api/discussions/${commentID}/like`,
+        {
+          userID: user.userID,
+        }
       );
       if (response.data.success) {
         setComment((prevComments) =>
@@ -81,14 +90,21 @@ const TotalDiscussion = ({ route }) => {
       }
     } catch (error) {
       console.error("Error Liking Comment:", error);
-      alert("Failed to like the comment. Please try again.");
+    } finally {
+      setVotedComments((prev) => ({ ...prev, [commentID]: false }));
     }
   };
 
   const handleDislike = async (commentID) => {
+    if (votedComments[commentID]) return;
+
+    setVotedComments((prev) => ({ ...prev, [commentID]: true }));
     try {
       const response = await axios.post(
-        `http://localhost:5001/api/discussions/${commentID}/dislike`
+        `http://localhost:5001/api/discussions/${commentID}/dislike`,
+        {
+          userID: user.userID,
+        }
       );
 
       if (response.data.success) {
@@ -105,7 +121,8 @@ const TotalDiscussion = ({ route }) => {
       }
     } catch (error) {
       console.error("Error Disliking Comment:", error);
-      alert("Failed to dislike comment. Please try again");
+    } finally {
+      setVotedComments((prev) => ({ ...prev, [commentID]: false }));
     }
   };
 
@@ -149,10 +166,16 @@ const TotalDiscussion = ({ route }) => {
                   minute: "2-digit",
                 })}
               </Text>
-              <Pressable onPress={() => handleLike(item._id)}>
+              <Pressable
+                onPress={() => handleLike(item._id)}
+                disabled={votedComments[item._id]}
+              >
                 <Text>LIKE</Text>
               </Pressable>
-              <Pressable onPress={() => handleDislike(item._id)}>
+              <Pressable
+                onPress={() => handleDislike(item._id)}
+                disabled={votedComments[item._id]}
+              >
                 <Text>DISLIKE</Text>
               </Pressable>
             </View>

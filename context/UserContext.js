@@ -1,5 +1,7 @@
 import React, { createContext, useState } from "react";
 
+import { jwtDecode } from "jwt-decode";
+
 // Create the UserContext
 export const UserContext = createContext();
 
@@ -8,9 +10,11 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const updateUser = (newUser) => {
-   
+    if (newUser.token) {
+      const decodedToken = jwtDecode(newUser.token);
+      newUser.userID = decodedToken.userID;
+    }
     setUser(newUser); // Update user state
-    
   };
 
   return (

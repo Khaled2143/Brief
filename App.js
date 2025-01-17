@@ -14,6 +14,7 @@ import SignUp from "./component/SignUp";
 import Account from "./component/Account";
 import TotalDiscussion from "./component/TotalDiscussion";
 import { UserContext, UserProvider } from "./context/UserContext";
+import ActiveDiscussions from "./component/ActiveDiscussions";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -71,6 +72,8 @@ export default function App() {
           component={Account}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen name="ActiveDiscussions" component={ActiveDiscussions} />
       </Stack.Navigator>
     );
   };
