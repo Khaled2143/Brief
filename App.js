@@ -15,9 +15,11 @@ import Account from "./component/Account";
 import TotalDiscussion from "./component/TotalDiscussion";
 import { UserContext, UserProvider } from "./context/UserContext";
 import ActiveDiscussions from "./component/ActiveDiscussions";
+import SplashScreen from "./component/SplashScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const RootStack = createStackNavigator();
 
 const CustomTheme = {
   ...DefaultTheme,
@@ -31,6 +33,7 @@ export default function App() {
   const [articles, setArticles] = useState([]); // Stores articles
   const [loading, setLoading] = useState(true); // Tracks loading state
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLogin = (userData) => {
     console.log("Before setUser in App.js:", userData);
@@ -120,37 +123,65 @@ export default function App() {
     );
   };
 
+  const MainTabs = () => (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === "Headline") {
+            iconName = focused
+              ? "information-circle"
+              : "information-circle-outline";
+          } else if (route.name === "Forum") {
+            iconName = focused ? "list" : "list-outline";
+          } else {
+            iconName = focused ? "log-in" : "log-in-outline";
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      {/* Headline Tab */}
+      <Tab.Screen name="Headline">
+        {() => <Headline articles={articles} loading={loading} />}
+      </Tab.Screen>
+
+      {/* Forum Tab (DiscussionStack) */}
+      <Tab.Screen name="Forum" component={DiscussionStack} />
+
+      {/* Profile Tab (LoginStack) */}
+      <Tab.Screen name="Profile" component={LoginStack} />
+    </Tab.Navigator>
+  );
+
+  const RootStackScreen = () => {
+    console.log("Rendering RootStacMSCREEEFBJGSHDFMGHDF");
+    return (
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name="Splash" component={SplashScreen} />
+        <RootStack.Screen name="Main" component={MainTabs} />
+      </RootStack.Navigator>
+    );
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <UserProvider>
       <NavigationContainer theme={CustomTheme}>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-
-              if (route.name === "Headline") {
-                iconName = focused
-                  ? "information-circle"
-                  : "information-circle-outline";
-              } else if (route.name === "Forum") {
-                iconName = focused ? "list" : "list-outline";
-              } else {
-                iconName = focused ? "log-in" : "log-in-outline";
-              }
-              return <Ionicons name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: "tomato",
-            tabBarInactiveTintColor: "gray",
-          })}
-        >
-          <Tab.Screen name="Headline">
-            {() => <Headline articles={articles} loading={loading} />}
-          </Tab.Screen>
-
-          <Tab.Screen name="Forum" component={DiscussionStack} />
-
-          <Tab.Screen name="Profile" component={LoginStack} />
-        </Tab.Navigator>
+        <MainTabs />
       </NavigationContainer>
     </UserProvider>
   );
