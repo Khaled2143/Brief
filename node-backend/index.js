@@ -1,12 +1,14 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const authenticate = require("./middleware/authenticate");
-require("dotenv").config();
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import authenticate from "./middleware/authenticate.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const app = express();
 const PORT = 5001;
-
-const mongoose = require("mongoose");
 
 mongoose
   .connect(process.env.MONGO_URI)

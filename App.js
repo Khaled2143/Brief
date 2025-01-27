@@ -16,6 +16,7 @@ import TotalDiscussion from "./component/TotalDiscussion";
 import { UserContext, UserProvider } from "./context/UserContext";
 import ActiveDiscussions from "./component/ActiveDiscussions";
 import SplashScreen from "./component/SplashScreen";
+import axios from "axios";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,11 +44,18 @@ export default function App() {
 
   const fetchArticles = async () => {
     try {
-      const response = await fetch("http://192.168.1.168:5001/summarize"); // Update with your backend URL
-      const result = await response.json();
-      setArticles(result.articles); // Assume `articles` is part of the response
+      const response = await fetch("http://192.168.1.168:5002/summarize"); // Use your backend URL
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`); // Handle non-200 responses
+      }
+
+      const result = await response.json(); // Parse JSON from the response
+      console.log("Raw Response:", result); // Log the raw response to debug
+
+      setArticles(result.articles); // Update state with articles
     } catch (error) {
-      console.error("Error Fetching Articles:", error);
+      console.error("Error Fetching Articles:", error); // Log errors
     } finally {
       setLoading(false); // Stop the loading spinner
     }
@@ -122,6 +130,21 @@ export default function App() {
       </Stack.Navigator>
     );
   };
+
+  const HeadlineStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Headline"
+        component={Headline}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="FetchData"
+        component={FetchComponent} // Replace with your actual FetchComponent
+      />
+    </Stack.Navigator>
+  );
+  
 
   const MainTabs = () => (
     <Tab.Navigator
