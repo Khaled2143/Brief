@@ -11,15 +11,14 @@ const scraper = async (url) => {
 
     const title = $("title").text(); //Extract the page title
     const paragraphs = $("p")
-      .map((i, el) => $(el).text().trim())
+      // If you have many <p> tags in your HTML, domElement is one of those p tags that cheerio is currently working on in the loop
+      .map((index, domElement) => $(domElement).text().trim())
       .get()
       .filter((text) => text.length > 0);
 
     const relevantParagraphs = paragraphs.filter((text) => text.length > 50);
     const uniqueParagraphs = [...new Set(relevantParagraphs)];
 
-    console.log("TITLE:", title);
-    console.log("PARAGRAPHS:", uniqueParagraphs);
 
     return { title, uniqueParagraphs };
   } catch (error) {
@@ -32,6 +31,6 @@ const scraper = async (url) => {
     }
   }
 };
-scraper(
-  "https://apnews.com/article/what-has-trump-done-trump-executive-orders-f061fbe7f08c08d81509a6af20ef8fc0"
-);
+
+
+export default scraper;

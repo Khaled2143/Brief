@@ -9,8 +9,24 @@ const openai = new OpenAI({
 
 const completion = async (contentList) => {
   try {
+    console.log("CONTENT LIST RECEIVED".contentList);
+
+    if (
+      !contentList ||
+      !contentList.title ||
+      !Array.isArray(contentList.uniqueParagraphs)
+    ) {
+      throw new Error(
+        "Invalid input: contentList must have a title string and a paragraphs array"
+      );
+    }
+
+    const formattedContent = `${
+      contentList.title
+    }\n\n${contentList.uniqueParagraphs.join("\n")}`;
+
     const prompt = `
-    You are an expert summarizer tasked with providing unbiased, concise, and professional summaries of articles. Your goal is to create a summary that captures the most important key points, ensuring the information can be read and understood in 1-2 minutes.
+    You are an expert summarizer tasked with providing unbiased, concise, and professional summaries of web scraped article data. Your goal is to create a summary that captures the most important key points, ensuring the information can be read and understood in 1-2 minutes.
 
         When summarizing:
         1. Avoid inserting personal opinions or any form of bias.
@@ -27,7 +43,7 @@ const completion = async (contentList) => {
         The summary should not exceed 300 words.
 
         Here your data: 
-        ${contentList}
+        ${formattedContent}
         `;
 
     const response = await openai.chat.completions.create({
@@ -47,4 +63,4 @@ const completion = async (contentList) => {
   }
 };
 
-completion();
+export default completion;
