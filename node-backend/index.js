@@ -73,6 +73,22 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
+app.get("/api/summaries", async (req, res) => {
+  try {
+    const summaries = await Summary.find();
+    return res.status(200).json({
+      success: true,
+      message: "Summaries retrieved successfully",
+      data: summaries,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error while retrieving summaries",
+    });
+  }
+});
+
 app.post("/api/summaries", async (req, res) => {
   const { title, section } = req.body;
 

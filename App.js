@@ -16,6 +16,7 @@ import TotalDiscussion from "./component/TotalDiscussion";
 import { UserContext, UserProvider } from "./context/UserContext";
 import ActiveDiscussions from "./component/ActiveDiscussions";
 import SplashScreen from "./component/SplashScreen";
+import DisplayHeadlines from "./component/DisplayHeadlines";
 import axios from "axios";
 
 const Stack = createStackNavigator();
@@ -135,16 +136,11 @@ export default function App() {
     <Stack.Navigator>
       <Stack.Screen
         name="Headline"
-        component={Headline}
+        component={DisplayHeadlines}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="FetchData"
-        component={FetchComponent} // Replace with your actual FetchComponent
       />
     </Stack.Navigator>
   );
-  
 
   const MainTabs = () => (
     <Tab.Navigator
@@ -168,9 +164,7 @@ export default function App() {
       })}
     >
       {/* Headline Tab */}
-      <Tab.Screen name="Headline">
-        {() => <Headline articles={articles} loading={loading} />}
-      </Tab.Screen>
+      <Tab.Screen name="Headline" component={DisplayHeadlines} />
 
       {/* Forum Tab (DiscussionStack) */}
       <Tab.Screen name="Forum" component={DiscussionStack} />
@@ -181,7 +175,6 @@ export default function App() {
   );
 
   const RootStackScreen = () => {
-    console.log("Rendering RootStacMSCREEEFBJGSHDFMGHDF");
     return (
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         <RootStack.Screen name="Splash" component={SplashScreen} />
