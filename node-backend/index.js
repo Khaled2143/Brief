@@ -54,10 +54,60 @@ const commentSchema = new mongoose.Schema(
 
 const Comment = mongoose.model("Comment", commentSchema);
 
+const summarySchema = new mongoose.Schema({
+  title: { type: String, required: true, unique: true },
+  section: [
+    {
+      header: { type: String },
+      content: { type: String },
+    },
+  ],
+  createdAt: { type: String, default: Date.now },
+});
+
+const Summary = mongoose.model("Summary", summarySchema);
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Server is running!");
+});
+
+app.post("/api/summaries", async (req, res) => {
+  const { title, section } = req.body;
+
+  try {
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        message: "Title must be provided to be a valid input.",
+      });
+    }
+
+    if (!section) {
+      return res.status(400).json({
+        success: false,
+        message: "Section must be provided to be a valid input.",
+      });
+    }
+    if (!Array.isArray(section)) {
+      return res.status(400).json({
+        success: false,
+        message: "Section must be an array containing headers and content.",
+      });
+    }
+    await Summary.create({ title: title, section: section });
+    return res.status(201).json({
+      success: true,
+      message: "Title and Section summaries have been successfully saved",
+    });
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error please try again",
+    });
+  }
 });
 
 app.post("/api/discussions/:id/dislike", async (req, res) => {
@@ -197,8 +247,6 @@ app.get("/api/users/:userID/active-discussions", async (req, res) => {
 
   try {
     const userExists = await Account.findById(userID);
-
-    console.log("USER NAMEEE", userExists);
 
     if (!userExists) {
       return res.status(404).json({
