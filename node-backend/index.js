@@ -62,6 +62,7 @@ const summarySchema = new mongoose.Schema({
       content: { type: String },
     },
   ],
+  imageUrl: { type: String, default: "" },
   createdAt: { type: String, default: Date.now },
 });
 
@@ -309,6 +310,51 @@ app.get("/api/users/:userID/active-discussions", async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "SERVER SIDE ERROR PELASE TRY AGAIN",
+    });
+  }
+});
+
+app.patch("/api/summaries/:id/image", async (req, res) => {
+  const { id } = req.params;
+  const { imageUrl } = req.body;
+
+  try {
+    if (!imageUrl || typeof imageUrl !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Image URL in string format must be provided.",
+      });
+    }
+
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "A valid object ID must be provided.",
+      });
+    }
+
+    const updateSummaryImage = await Summary.findByIdAndUpdate(
+      id,
+      { imageUrl },
+      { new: true }
+    );
+
+    if (!updateSummaryImage) {
+      return res.status(404).json({
+        success: false,
+        message: "Unable to locate summary",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Image URL updated successfully",
+    });
+  } catch (error) {
+    console.error("Server error: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error occured, please try again",
     });
   }
 });
