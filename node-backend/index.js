@@ -74,6 +74,8 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
+app.use("/images", express.static("public/img"));
+
 app.get("/api/summaries", async (req, res) => {
   try {
     const summaries = await Summary.find();

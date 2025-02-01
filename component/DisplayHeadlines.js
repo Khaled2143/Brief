@@ -1,4 +1,4 @@
-import react from "react";
+import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
@@ -37,16 +37,17 @@ const DisplayHeadlines = () => {
 
   const renderHeadline = ({ item }) => {
     return (
-      <Pressable
-        style={styles.headlineBox}
-        onpress={() => navigation.navigate("SummaryDetails", { summary: item })}
-      >
-        <Image
-          source={require("../img/Trump_speech.jpeg")}
-          style={styles.image}
-        />
-        <Text style={styles.title}>{item.title}</Text>
-      </Pressable>
+      (
+        <Pressable
+          style={styles.headlineBox}
+          onPress={() =>
+            navigation.navigate("SummaryDetails", { summary: item })
+          }
+        >
+          <Image source={{ uri: item.imageUrl }} style={styles.image} />
+          <Text style={styles.title}>{item.title}</Text>
+        </Pressable>
+      )
     );
   };
 

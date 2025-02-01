@@ -145,6 +145,7 @@ export default function App() {
   const MainTabs = () => (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -164,7 +165,7 @@ export default function App() {
       })}
     >
       {/* Headline Tab */}
-      <Tab.Screen name="Headline" component={DisplayHeadlines} />
+      <Tab.Screen name="Headline" component={HeadlineStack} />
 
       {/* Forum Tab (DiscussionStack) */}
       <Tab.Screen name="Forum" component={DiscussionStack} />
