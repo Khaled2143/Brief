@@ -1,10 +1,7 @@
-import { StatusBar } from "expo-status-bar";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useState, useEffect } from "react";
-import FetchComponent from "./component/Fetch";
-import Headline from "./component/Headline";
 import Login from "./component/LoginForm";
 import Discussion from "./component/Discussion";
 import CreateComponent from "./component/CreateComponent";
@@ -17,7 +14,8 @@ import { UserContext, UserProvider } from "./context/UserContext";
 import ActiveDiscussions from "./component/ActiveDiscussions";
 import SplashScreen from "./component/SplashScreen";
 import DisplayHeadlines from "./component/DisplayHeadlines";
-import axios from "axios";
+import SummaryDetails from "./component/SummaryDetails";
+import Home from "./component/Home";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,7 +25,7 @@ const CustomTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: "#ede8d0", // Change this to your desired background color
+    background: "#f8f8f8", // Change this to your desired background color
   },
 };
 
@@ -136,8 +134,13 @@ export default function App() {
     <Stack.Navigator>
       <Stack.Screen
         name="Headline"
-        component={DisplayHeadlines}
+        component={Home}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SummaryDetails"
+        component={SummaryDetails}
+        options={{ headerTitle: "", headerTransparent: true }}
       />
     </Stack.Navigator>
   );
@@ -149,10 +152,8 @@ export default function App() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Headline") {
-            iconName = focused
-              ? "information-circle"
-              : "information-circle-outline";
+          if (route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Forum") {
             iconName = focused ? "list" : "list-outline";
           } else {
@@ -165,7 +166,7 @@ export default function App() {
       })}
     >
       {/* Headline Tab */}
-      <Tab.Screen name="Headline" component={HeadlineStack} />
+      <Tab.Screen name="Home" component={HeadlineStack} />
 
       {/* Forum Tab (DiscussionStack) */}
       <Tab.Screen name="Forum" component={DiscussionStack} />
