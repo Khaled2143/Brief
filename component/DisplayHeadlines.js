@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, Pressable, Image } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const DisplayHeadlines = () => {
   const [headlines, setHeadlines] = useState([]);
@@ -37,17 +38,13 @@ const DisplayHeadlines = () => {
 
   const renderHeadline = ({ item }) => {
     return (
-      (
-        <Pressable
-          style={styles.headlineBox}
-          onPress={() =>
-            navigation.navigate("SummaryDetails", { summary: item })
-          }
-        >
-          <Image source={{ uri: item.imageUrl }} style={styles.image} />
-          <Text style={styles.title}>{item.title}</Text>
-        </Pressable>
-      )
+      <Pressable
+        style={styles.headlineBox}
+        onPress={() => navigation.navigate("SummaryDetails", { summary: item })}
+      >
+        <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        <Text style={styles.title}>{item.title}</Text>
+      </Pressable>
     );
   };
 
@@ -65,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
   },
+
   headlineBox: {
     flexDirection: "row",
     alignItems: "center",
@@ -72,13 +70,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "#fff",
+    borderColor: "#000",
+    backgroundColor: "#333",
     padding: 8,
     elevation: 2,
     shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 1,
+    shadowRadius: 6,
   },
   image: {
     width: 80,
@@ -90,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "bold",
     flexShrink: 1,
+    color: "white",
   },
   loading: {
     fontSize: 16,

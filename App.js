@@ -133,7 +133,7 @@ export default function App() {
   const HeadlineStack = () => (
     <Stack.Navigator>
       <Stack.Screen
-        name="Headline"
+        name="Home Page"
         component={Home}
         options={{ headerShown: false }}
       />
