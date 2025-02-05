@@ -1,10 +1,13 @@
 import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FlatList, Pressable, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+
+const { width } = Dimensions.get("window");
+const boxWidth = width * 0.6;
 
 const DisplayHeadlines = () => {
   const [headlines, setHeadlines] = useState([]);
@@ -26,6 +29,18 @@ const DisplayHeadlines = () => {
         setError(error);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        Righteous: require("../assets/fonts/Righteous-Regular.ttf"),
+        "SF-Pro-Display-Bold": require("../assets/fonts/SF-Pro-Display-Bold.otf"),
+        "SF-Pro-Display-Regular": require("../assets/fonts/SF-Pro-Display-Regular.otf"),
+      });
+    };
+
+    loadFonts();
   }, []);
 
   if (loading) {
@@ -50,10 +65,15 @@ const DisplayHeadlines = () => {
 
   return (
     <FlatList
+      horizontal={true}
+      snapToAlignment="start"
+      snapToInterval={boxWidth + 16}
+      decelerationRate="fast"
       data={headlines}
       renderItem={renderHeadline}
       keyExtractor={(item) => item._id}
       contentContainerStyle={styles.container}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };
@@ -61,34 +81,43 @@ const DisplayHeadlines = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    justifyContent: "space-between",
   },
 
   headlineBox: {
-    flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
+    flexDirection: "column",
+    marginRight: 10,
     marginBottom: 16,
-    borderRadius: 8,
+    borderRadius: 16,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: "#000",
     backgroundColor: "#333",
-    padding: 8,
+    width: boxWidth,
+    height: boxWidth * 1.2,
+    padding: 16,
     elevation: 2,
     shadowColor: "#000",
     shadowOpacity: 1,
     shadowRadius: 6,
   },
   image: {
-    width: 80,
-    height: 80,
+    width: "100%",
+    height: "60%",
     borderRadius: 8,
     marginRight: 10,
+    resizeMode: "cover",
   },
   title: {
-    fontSize: 17,
+    fontFamily: "SF-Pro-Display",
+    fontSize: 18,
     fontWeight: "bold",
     flexShrink: 1,
+    flexWrap: "wrap",
     color: "white",
+    marginTop: 8,
+    marginHorizontal: 4,
   },
   loading: {
     fontSize: 16,

@@ -41,29 +41,6 @@ export default function App() {
     console.log("After setUser in App.js:", user);
   };
 
-  const fetchArticles = async () => {
-    try {
-      const response = await fetch("http://192.168.1.168:5002/summarize"); // Use your backend URL
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`); // Handle non-200 responses
-      }
-
-      const result = await response.json(); // Parse JSON from the response
-      console.log("Raw Response:", result); // Log the raw response to debug
-
-      setArticles(result.articles); // Update state with articles
-    } catch (error) {
-      console.error("Error Fetching Articles:", error); // Log errors
-    } finally {
-      setLoading(false); // Stop the loading spinner
-    }
-  };
-
-  useEffect(() => {
-    fetchArticles(); // Fetch articles when the app loads
-  }, []);
-
   const LoginStack = () => {
     return (
       <Stack.Navigator screenOptions={{ animationEnabled: false }}>
@@ -148,6 +125,18 @@ export default function App() {
   const MainTabs = () => (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarStyle: {
+          backgroundColor: "black",
+          borderTopWidth: 0,
+          height: 90,
+          borderRadius: 10,
+          paddingTop: 10,
+          position: "absolute",
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: "SF-Pro-Display",
+        },
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -155,14 +144,14 @@ export default function App() {
           if (route.name === "Home") {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "Forum") {
-            iconName = focused ? "list" : "list-outline";
+            iconName = focused ? "chatbubbles-outline" : "chatbubbles";
           } else {
-            iconName = focused ? "log-in" : "log-in-outline";
+            iconName = focused ? "person-circle-outline" : "person-circle";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#fff",
+        tabBarInactiveTintColor: "#777",
       })}
     >
       {/* Headline Tab */}

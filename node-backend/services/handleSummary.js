@@ -5,7 +5,7 @@ import axios from "axios";
 const HandleSummary = async () => {
   try {
     const data = await scraper(
-      "https://19thnews.org/2025/01/trump-reinstates-the-global-gag-rule-on-abortion/"
+      "https://www.wbaltv.com/article/donald-trump-record-executive-orders-week-one/63576990"
     );
 
     const summaryRaw = await completion(data);

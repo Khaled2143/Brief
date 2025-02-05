@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext.js";
 import { useContext } from "react";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
-import { TextInput } from "react-native-gesture-handler";
+import { Pressable, TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "react-native-vector-icons";
 
 const Home = () => {
@@ -40,6 +40,12 @@ const Home = () => {
             style={styles.input}
           ></TextInput>
         </View>
+      </View>
+      <View style={styles.politicalNews}>
+        <Text style={styles.politicalText}>Latest Political News 🔥</Text>
+        <Pressable>
+          <Text style={styles.viewAll}>View All</Text>
+        </Pressable>
       </View>
 
       <View>
@@ -97,6 +103,27 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#f3f3f3",
     fontFamily: "SF-Pro-Display",
+  },
+  politicalNews: {
+    marginTop: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 3,
+    width: "90%",
+    alignSelf: "center",
+  },
+  politicalText: {
+    color: "#fff",
+    fontSize: 15,
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "bold",
+  },
+
+  viewAll: {
+    color: "#676767",
+    fontSize: 15,
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "bold",
   },
 });
 

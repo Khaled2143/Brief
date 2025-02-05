@@ -16,8 +16,8 @@ const updateImage = async (summaryID, imageFileName) => {
   }
 };
 
-const summaryID = "679854b4fe242d24bd16ab7f";
-const imageFileName = "Trump_2.jpg";
+const summaryID = "67a296749859e3c8b68372a1";
+const imageFileName = "Trump_Signing_Papers.jpg";
 updateImage(summaryID, imageFileName);
 
 export default updateImage;

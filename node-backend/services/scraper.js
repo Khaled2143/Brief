@@ -19,7 +19,7 @@ const scraper = async (url) => {
     const relevantParagraphs = paragraphs.filter((text) => text.length > 50);
     const uniqueParagraphs = [...new Set(relevantParagraphs)];
 
-
+    
     return { title, uniqueParagraphs };
   } catch (error) {
     if (error.response) {
